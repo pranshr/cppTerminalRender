@@ -63,3 +63,9 @@ void drawLine(int x1, int y1, int x2, int y2, Window& window) {
         }
     }
 }
+
+void drawTriangle(vec2 a, vec2 b, vec2 c, Window &window) {
+    drawLine(a.x, a.y, b.x, b.y, window);
+    drawLine(b.x, b.y, c.x, c.y, window);
+    drawLine(c.x, c.y, a.x, a.y, window);
+}

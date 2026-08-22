@@ -24,7 +24,7 @@ void Window::clearBuffer(char fill) {
 
 void Window::setPixel(int screenX, int screenY, char c) {
     // Rendered pixel can be out of bounds, so don't render it.
-    if (screenX < 0 || screenX > width || screenY < 0 || screenY > height) {
+    if (screenX < 0 || screenX >= width || screenY < 0 || screenY >= height) {
         return;
     }
 

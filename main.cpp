@@ -13,7 +13,9 @@ int main(int argc, char **argv) {
   // drawing a pixel
   // w.setPixel(50, 15);
   // w.presentBuffer();
-  drawRect(35, 8, 9, 29, w);
+  // drawRect(35, 8, 9, 29, w);
+  // w.presentBuffer();
+  drawLine(35, 8, 44, 36, w);
   w.presentBuffer();
 
   return 0;

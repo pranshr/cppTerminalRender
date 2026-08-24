@@ -1,6 +1,7 @@
 #include "Framebuffer.hpp"
 #include <asm-generic/ioctls.h>
 #include <iostream>
+#include <ostream>
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include <vector>
@@ -9,7 +10,7 @@
     
 Window::Window() { 
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &window); 
-    width = window.ws_col;
+    width = window.ws_col / 2;
     height = window.ws_row;
     buffer.resize(height, std::vector<char>(width));
 }
@@ -33,12 +34,20 @@ void Window::setPixel(int screenX, int screenY, char c) {
 
 void Window::presentBuffer(bool clearSpace) {
     // Reset the screen
-    if (clearSpace) std::cout << "\033[2J\033[1;1H";
+    if (clearSpace) {
+        for (int i=0; i< height; i++) {
+            std::cout << std::endl;
+        }
+    }
+    std::cout << "\033[2J\033[1;1H";
 
     // Print the buffer
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
-            std::cout << buffer.at(i).at(j);
+          std::cout << buffer.at(i).at(j) << buffer.at(i).at(j);
         }
+        std::cout << std::endl;
     }
+
+    std::cout.flush();
 }

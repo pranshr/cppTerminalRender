@@ -1,4 +1,5 @@
 #include "Framebuffer.hpp"
+#include "Math.hpp"
 #include <cstdlib>
 #include <utility>
 #include "Draw.hpp"
@@ -32,6 +33,17 @@ namespace {
             x1 -= invSlope1;
             x2 -= invSlope2;
         }
+    }
+
+    float cameraZDistance = 30.0f;
+    float f = 20.0f; 
+
+    vec2 project3DTo2D(vec3 point, Window& window) {
+
+        return vec2{
+            ((float)window.getWidth()/2) + (point.x / (cameraZDistance - point.z) * f),
+            ((float)window.getHeight()/2) + (point.y / (cameraZDistance - point.z) * f),
+        };
     }
 }
 
@@ -103,10 +115,13 @@ void drawWireframeTriangle(vec2 a, vec2 b, vec2 c, Window &window) {
     drawLine(c.x, c.y, a.x, a.y, window);
 }
 
-void drawTriangle(vec2 a, vec2 b, vec2 c, Window &window) {
+void drawTriangle(triangle2D triangle, Window &window) {
     // 1. Sort points in increasing order of y and find midpoint
     // 2. Rasterize the top tringle
     // 3. Rasterize the bottom triangle
+    vec2 a = triangle.a;
+    vec2 b = triangle.b;
+    vec2 c = triangle.c;
     vec2 m;
     
     if (a.y > b.y) std::swap(a, b);
@@ -133,4 +148,26 @@ void drawTriangle(vec2 a, vec2 b, vec2 c, Window &window) {
         fillFlatBottomTriangle(flatBottomTriangle, window);
         fillFlatTopTriangle(flatTopTriangle, window);
     }
+}
+
+void renderTriangle(triangle3D triangle, Window& window) {
+  triangle2D transformedTriangle{
+      project3DTo2D(triangle.a, window),
+      project3DTo2D(triangle.b, window),
+      project3DTo2D(triangle.c, window),
+  };
+
+  drawTriangle(transformedTriangle, window);
+}
+
+void renderPoint(vec3 point, Window &window) {
+    vec2 point2D = project3DTo2D(point, window);
+    window.setPixel(point2D.x, point2D.y);
+}
+
+void renderLine(vec3 start, vec3 end, Window &window) {
+    vec2 start2D = project3DTo2D(start, window);
+    vec2 end2D = project3DTo2D(end, window);
+
+    drawLine(start2D.x, start2D.y, end2D.x, end2D.y, window);
 }

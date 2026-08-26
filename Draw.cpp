@@ -62,30 +62,20 @@ void drawRect(int x, int y, int h, int w, Window& window) {
 
 void drawLine(int x1, int y1, int x2, int y2, Window& window) {
     // Using Bressenham's Line Drawing Algorithm
-    int a1, b1, a2, b2;
-    bool horizontal = std::abs(x2 - x1) > std::abs(y2 - y1); 
+    bool horizontal = std::abs(x2 - x1) >= std::abs(y2 - y1); 
     
-    if (horizontal) {
-      a1 = x1;
-      a2 = x2;
-      b1 = y1;
-      b2 = y2;
-    }
-    else {
-      a1 = y1;
-      a2 = y2;
-      b1 = x1;
-      b2 = x2;
-    }
+    int a1 = horizontal ? x1 : y1;
+    int b1 = horizontal ? y1 : x1;
+    int a2 = horizontal ? x2 : y2;
+    int b2 = horizontal ? y2 : x2;
 
     if (a1 > a2) {
         std::swap(a1, a2);
         std::swap(b1, b2);
     }   
 
-    int db = b2 - b1;
     int da = a2 - a1;
-
+    int db = b2 - b1;
     int dir = (db > 0) ? 1 : -1;
     db *= dir;
 
@@ -93,11 +83,11 @@ void drawLine(int x1, int y1, int x2, int y2, Window& window) {
         int b = b1;
         int p = 2*db - da;
 
-        for (int i=0; i<da+1; i++) {
+        for (int a = a1; a <= a2; a++) {
             if (horizontal){
-                window.setPixel(a1 + i, b);
+                window.setPixel(a, b);
             } else {
-                window.setPixel(b, a1 + i);
+                window.setPixel(b, a);
             }
 
             if (p >= 0) {
@@ -109,7 +99,11 @@ void drawLine(int x1, int y1, int x2, int y2, Window& window) {
     }
 }
 
-void drawWireframeTriangle(vec2 a, vec2 b, vec2 c, Window &window) {
+void drawWireframeTriangle(triangle2D triangle, Window &window) {
+    vec2 a = triangle.a;
+    vec2 b = triangle.b;
+    vec2 c = triangle.c;
+
     drawLine(a.x, a.y, b.x, b.y, window);
     drawLine(b.x, b.y, c.x, c.y, window);
     drawLine(c.x, c.y, a.x, a.y, window);
@@ -158,6 +152,16 @@ void renderTriangle(triangle3D triangle, Window& window) {
   };
 
   drawTriangle(transformedTriangle, window);
+}
+
+void renderWireframeTriangle(triangle3D triangle, Window &window) {
+  triangle2D transformedTriangle{
+      project3DTo2D(triangle.a, window),
+      project3DTo2D(triangle.b, window),
+      project3DTo2D(triangle.c, window),
+  };
+
+  drawWireframeTriangle(transformedTriangle, window);
 }
 
 void renderPoint(vec3 point, Window &window) {

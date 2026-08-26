@@ -30,14 +30,18 @@ int main(int argc, char **argv) {
 
   Mesh square ={ 
     {
-      {-12, -12, 6},
-      {12, -12, 6},
-      {12, 12, 6},
-      {-12, 12, 6},
+    {-12,-12,-6}, { 12,-12,-6},
+    { 12, 12,-6}, {-12, 12,-6},
+    {-12,-12, 6}, { 12,-12, 6},
+    { 12, 12, 6}, {-12, 12, 6}
     },
     {
-      {0, 1, 2},
-      {0, 2, 3}, 
+      {0, 1, 2}, {0, 2, 3},
+      {4, 5, 6}, {4, 6, 7},
+      {1, 5, 6}, {1, 6, 2},
+      {0, 4, 7}, {0, 7, 3},
+      {0, 4, 5}, {0, 5, 1},
+      {3, 7, 6}, {3, 6, 2},
     }
   };
 
@@ -63,7 +67,11 @@ int main(int argc, char **argv) {
       rotateX(tri.b, angle);
       rotateX(tri.c, angle);
 
-      renderTriangle(tri, w);
+      rotateY(tri.a, angle*2);
+      rotateY(tri.b, angle*2);
+      rotateY(tri.c, angle*2);
+
+      renderWireframeTriangle(tri, w);
     }
 
     string debug = to_string(angle) + "deg ";

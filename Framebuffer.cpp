@@ -9,10 +9,16 @@
 
     
 Window::Window() { 
+    std::cout << "\e[?1049h]";
+
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &window); 
     width = window.ws_col / 2;
     height = window.ws_row;
     buffer.resize(height, std::vector<char>(width));
+}
+
+Window::~Window() {
+    std::cout << "\e[?1049l]";
 }
 
 int Window::getWidth() {return width;}
@@ -44,7 +50,7 @@ void Window::presentBuffer(bool clearSpace) {
     // Print the buffer
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
-          std::cout << buffer.at(i).at(j) << buffer.at(i).at(j);
+            std::cout << buffer.at(i).at(j) << buffer.at(i).at(j);
         }
         std::cout << std::endl;
     }

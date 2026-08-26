@@ -1,6 +1,7 @@
 #ifndef MATH_HPP
 #define MATH_HPP
 
+#include <vector>
 struct vec2 {
     float x;
     float y;
@@ -18,6 +19,15 @@ struct triangle2D {
 
 struct triangle3D {
     vec3 a, b, c;
+};
+
+struct Triangle {
+    int a, b, c;
+};
+
+struct Mesh {
+    std::vector<vec3> vertices;
+    std::vector<Triangle> faces;
 };
 
 void rotateX(vec3& point, int angle);

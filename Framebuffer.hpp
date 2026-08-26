@@ -15,6 +15,8 @@ class Window {
     
     public:
         Window();
+        ~Window();
+
         int getWidth();
         int getHeight();
 
